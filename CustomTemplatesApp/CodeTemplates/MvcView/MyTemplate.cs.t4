@@ -1,0 +1,34 @@
+﻿<#@ template language="C#" HostSpecific="True" #>
+<#@ output extension=".cshtml" #>
+<#@ include file="Imports.include.t4" #>
+@model <#= ViewDataTypeName #>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title><#= ViewName #></title>
+</head>
+<body>
+    <h2><#= ViewName #></h2>
+	<table>
+	<#
+	// Проходим по всем свойствам модели
+	foreach (PropertyMetadata property in ModelMetadata.Properties) {
+		// Scaffold - нужно ли для этого свойства создавать html разметку
+		// IsPrimaryKey - свойство является первичным ключом
+		// IsForeignKey - свойство является внешним ключом
+		if (property.Scaffold && !property.IsPrimaryKey && !property.IsForeignKey) {
+	#>
+	<tr>
+			<td><b>@Html.DisplayNameFor(model => model.<#= GetValueExpression(property) #>)</b></td>
+			<td>@Html.DisplayFor(model => model.<#= GetValueExpression(property) #>)</td>
+		</tr>
+	<#
+		}
+	}
+	#>
+	</table>
+</body>
+</html>
+<#@ include file="ModelMetadataFunctions.cs.include.t4" #>
